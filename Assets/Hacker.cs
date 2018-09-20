@@ -1,24 +1,21 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
 public class Hacker : MonoBehaviour {
 
     // Game Config Data
-    string[] level1Passwords = {"books", "aisle", "self", "password", "font", "borrow" };
-    string[] level2Passwords = {"prisoner", "handcuffs", "holster", "uniform", "arrest" };
+    string[] lvl1Pwds = {"books", "aisle", "self", "password", "font", "borrow" };
+    string[] lvl2Pwds = {"prisoner", "handcuffs", "holster", "uniform", "arrest" };
 
     // Game State
     int level;
     enum Screen { MainMenu, Password, Win};
     Screen curScreen;
-    String password;
+    string password;
 
 	// Use this for initialization
 	void Start () {
         level = 0;
-        print(level1Passwords);
+        print(lvl1Pwds);
         ShowMainMenu();
     }
 
@@ -63,21 +60,10 @@ public class Hacker : MonoBehaviour {
 
     private void RunMainMenu(string input)
     {
-        if (input == "1")
+        bool isValidLvlNum = (input == "1" || input == "2");
+        if (isValidLvlNum)
         {
-            level = 1;
-            password = level1Passwords[2]; // TODO make random later
-            StartGame();
-        }
-        else if (input == "2")
-        {
-            level = 2;
-            password = level2Passwords[4];
-            StartGame();
-        }
-        else if (input == "3")
-        {
-            level = 3;
+            level = int.Parse(input);
             StartGame();
         }
         else
@@ -89,9 +75,19 @@ public class Hacker : MonoBehaviour {
     private void StartGame()
     {
         curScreen = Screen.Password;
-        Terminal.WriteLine("You have chosen level " + level);
+        Terminal.ClearScreen();
+        switch (level)
+        {
+            case 1:
+                password = lvl1Pwds[Random.Range(0, lvl1Pwds.Length)];
+                break;
+            case 2:
+                password = lvl2Pwds[Random.Range(0, lvl2Pwds.Length)];
+                break;
+            default:
+                Debug.LogError("Invalid Level #");
+                break;
+        }
         Terminal.WriteLine("Please enter the password: ");
     }
-
-
 }
